@@ -44,4 +44,7 @@ def lipinski(smiles, verbose = False):
     return descriptors
 
 df_lipinski = lipinski(df.canonical_smiles)
-display(df_lipinski)
+# display(df_lipinski)
+# display(df)
+df_combined = pd.concat([df,df_lipinski], axis=1)
+display(df_combined)
