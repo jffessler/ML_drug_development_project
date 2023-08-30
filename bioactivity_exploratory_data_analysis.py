@@ -87,13 +87,14 @@ df_final = pIC50(df_norm)
 # print(df_final.pIC50.describe())
 
 df_2class = df_final[df_final.bioactivity_class != "intermediate"]
-# display(df_2class)
+# print(df_2class.pIC50.describe())
+display(df_2class)
 
 #### Exploratory Data Analysis ####
 #### Chemical Space Analysis #### <- correct terminology for drug testing
 sns.set(style='ticks')
 
-###plot 1 
+###plot 1: bar plot of bioactivity
 # plt.figure(figsize=(5.5,5.5))
 # sns.countplot(x="bioactivity_class", data=df_2class, edgecolor="black")
 
@@ -104,21 +105,76 @@ sns.set(style='ticks')
 # shutil.move("/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plot_bioactivity_class.pdf", "/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plots/plot_bioactivity_class.pdf")
 
 
-plt.figure(figsize=(5.5, 5.5))
-ax = plt.subplot(111)
+### plot 2: scatter plot of molecular weight and logP
+# plt.figure(figsize=(5.5, 5.5))
+# ax = plt.subplot(111)
 
-sns.scatterplot(x='MW', y='LogP', data=df_2class, hue='bioactivity_class', size='pIC50', edgecolor='black', alpha=0.7)
+# sns.scatterplot(x='MW', y='LogP', data=df_2class, hue='bioactivity_class', size='pIC50', edgecolor='black', alpha=0.7)
 
-plt.xlabel('MW', fontsize=14, fontweight='bold')
-plt.ylabel('LogP', fontsize=14, fontweight='bold')
-# plt.legend(bbox_to_anchor=(1.05, 1), loc=1, borderaxespad=0)
+# plt.xlabel('MW', fontsize=14, fontweight='bold')
+# plt.ylabel('LogP', fontsize=14, fontweight='bold')
+# # plt.legend(bbox_to_anchor=(1.05, 1), loc=1, borderaxespad=0)
 
-# Shrink current axis by 20%
-box = ax.get_position()
-ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+# # Shrink current axis by 20%
+# box = ax.get_position()
+# ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
 
-# Put a legend to the right of the current axis
-ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-plt.savefig('plot_MW_vs_LogP.pdf')
-     
-shutil.move("/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plot_MW_vs_LogP.pdf", "/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plots/plot_MW_vs_LogP.pdf")
+# # Put a legend to the right of the current axis
+# ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+# plt.savefig('plot_MW_vs_LogP.pdf')
+# shutil.move("/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plot_MW_vs_LogP.pdf", "/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plots/plot_MW_vs_LogP.pdf")
+
+###plot 3: box plot of pIC50 (bioactivity)
+# plt.figure(figsize=(5.5,5.5))
+# sns.boxplot(x="bioactivity_class", y="pIC50", data=df_2class)
+
+# plt.xlabel("Bioactivity Class", fontsize=14,fontweight="bold")
+# plt.ylabel("pIC50", fontsize=14,fontweight="bold")
+
+# plt.savefig('plot_pIC50.pdf')
+# shutil.move("/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plot_pIC50.pdf", "/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plots/plot_pIC50.pdf")
+
+###  Mann Whitney Test
+def mannwhitney(descriptor,df_2class):
+  # https://machinelearningmastery.com/nonparametric-statistical-significance-tests-in-python/
+  from numpy.random import seed
+  from numpy.random import randn
+  from scipy.stats import mannwhitneyu
+
+# seed the random number generator
+  seed(1)
+
+# actives and inactives
+  selection = [descriptor, 'bioactivity_class']
+  df = df_2class[selection]
+  active = df[df['bioactivity_class'] == 'active']
+  active = active[descriptor]
+
+  selection = [descriptor, 'bioactivity_class']
+  df = df_2class[selection]
+  inactive = df[df['bioactivity_class'] == 'inactive']
+  inactive = inactive[descriptor]
+
+# compare samples
+  stat, p = mannwhitneyu(active, inactive)
+  #print('Statistics=%.3f, p=%.3f' % (stat, p))
+
+# interpret
+  alpha = 0.05
+  if p > alpha:
+    interpretation = 'Same distribution (fail to reject H0)'
+  else:
+    interpretation = 'Different distribution (reject H0)'
+  
+  results = pd.DataFrame({'Descriptor':descriptor,
+                          'Statistics':stat,
+                          'p':p,
+                          'alpha':alpha,
+                          'Interpretation':interpretation}, index=[0])
+  filename = 'mannwhitneyu_' + descriptor + '.csv'
+  results.to_csv(filename)
+
+  return results
+
+print(mannwhitney('pIC50',df_2class))
