@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import shutil
 
 #import data for analysis
-df = pd.read_csv("bioactivity_preprocessed_data.csv")
+df = pd.read_csv("CSV_data_files/bioactivity_preprocessed_data.csv")
 # display(df)
 
 ## Lipinski descriptors
@@ -88,7 +88,7 @@ df_final = pIC50(df_norm)
 
 df_2class = df_final[df_final.bioactivity_class != "intermediate"]
 # print(df_2class.pIC50.describe())
-display(df_2class)
+# display(df_2class)
 
 #### Exploratory Data Analysis ####
 #### Chemical Space Analysis #### <- correct terminology for drug testing
@@ -177,4 +177,61 @@ def mannwhitney(descriptor,df_2class):
 
   return results
 
-print(mannwhitney('pIC50',df_2class))
+# print(mannwhitney('pIC50',df_2class))
+
+###ploy 4: boxplot 
+# plt.figure(figsize=(5.5, 5.5))
+
+# sns.boxplot(x = 'bioactivity_class', y = 'LogP', data = df_2class)
+
+# plt.xlabel('Bioactivity class', fontsize=14, fontweight='bold')
+# plt.ylabel('LogP', fontsize=14, fontweight='bold')
+
+# plt.savefig('plot_LogP.pdf')
+# shutil.move("/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plot_LogP.pdf", "/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plots/plot_LogP.pdf")
+# print(mannwhitney('LogP',df_2class))
+
+###plot 5 boxplot Molecular weight
+# plt.figure(figsize=(5.5, 5.5))
+
+# sns.boxplot(x = 'bioactivity_class', y = 'MW', data = df_2class)
+
+# plt.xlabel('Bioactivity class', fontsize=14, fontweight='bold')
+# plt.ylabel('MW', fontsize=14, fontweight='bold')
+
+# plt.savefig('plot_MW.pdf')
+# shutil.move("/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plot_MW.pdf", "/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plots/plot_MW.pdf")
+# print(mannwhitney('MW',df_2class))
+
+###plot 6 boxplot Number of Hydrogen donors
+# plt.figure(figsize=(5.5, 5.5))
+
+# sns.boxplot(x = 'bioactivity_class', y = 'NumHDonors', data = df_2class)
+
+# plt.xlabel('Bioactivity class', fontsize=14, fontweight='bold')
+# plt.ylabel('NumHDonors', fontsize=14, fontweight='bold')
+
+# plt.savefig('plot_NumHDonors.pdf')
+# shutil.move("/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plot_NumHDonors.pdf", "/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plots/plot_NumHDonors.pdf")
+# print(mannwhitney('NumHDonors',df_2class))
+
+###plot 7: boxplot of Number of Hydrogen acceptors
+# plt.figure(figsize=(5.5, 5.5))
+
+# sns.boxplot(x = 'bioactivity_class', y = 'NumHAcceptors', data = df_2class)
+
+# plt.xlabel('Bioactivity class', fontsize=14, fontweight='bold')
+# plt.ylabel('NumHAcceptors', fontsize=14, fontweight='bold')
+
+# plt.savefig('plot_NumHAcceptors.pdf')
+# shutil.move("/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plot_NumHAcceptors.pdf", "/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/plots/plot_NumHAcceptors.pdf")
+# print(mannwhitney('NumHAcceptors',df_2class))
+
+###consolidate .CSV files
+# shutil.move("/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/mannwhitneyu_LogP.csv", "/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/CSV_data_files/mannwhitneyu_LogP.csv")
+# shutil.move("/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/mannwhitneyu_MW.csv", "/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/CSV_data_files/mannwhitneyu_MW.csv")
+# shutil.move("/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/mannwhitneyu_NumHAcceptors.csv", "/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/CSV_data_files/mannwhitneyu_NumHAcceptors.csv")
+# shutil.move("/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/mannwhitneyu_NumHDonors.csv", "/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/CSV_data_files/mannwhitneyu_NumHDonors.csv")
+# shutil.move("/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/mannwhitneyu_pIC50.csv", "/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/CSV_data_files/mannwhitneyu_pIC50.csv")
+# shutil.move("/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/bioactivity_data.csv", "/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/CSV_data_files/bioactivity_data.csv")
+# shutil.move("/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/bioactivity_preprocessed_data.csv", "/Users/johnfessler/Desktop/Coding Practice/ML_drug_development_project/CSV_data_files/bioactivity_preprocessed_data.csv")
